@@ -6,7 +6,6 @@ namespace App\Path;
 
 use App\Data\PositionData\PositionData;
 use App\Data\PositionData\PositionInitialData;
-use App\Mover\Moves\Up;
 
 class PathFinder
 {
@@ -34,20 +33,27 @@ class PathFinder
          * First path
          */
         $path = new Path($this->labyrinth, $this->positionData);
-
-        $this->start($path);
-
+        print_r($this->start($path));
     }
 
 
-    private function start($path)
+    /**
+     * @param Path $path
+     * @return mixed
+     */
+    private function start(Path $path)
     {
-        while (!$path->reachedEnd()){
-            if ($path->isStuck()){
-                unset($path);
-                break;
+        while (!$path->reachedEnd()) {
+            if (!$path->isStuck()) {
+                $output = $path->lookAround();
+                foreach ($output as $path) {
+                    $this->start($path);
+                }
             }
-            $paths[] = $path->lookAround();
+        }
+
+        if ($path->reachedEnd() && !$path->isStuck()) {
+            return $path;
         }
     }
 

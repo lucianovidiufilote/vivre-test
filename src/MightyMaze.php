@@ -40,7 +40,7 @@ class MightyMaze
 
     public function run($json = null)
     {
-        $json = '{"dimX": 10, "dimY": 10, "posAX": 2, "posAY": 2, "posBX": 7, "posBY": 8, "brickDensity": 50}';
+        $json = '{"dimX": 5, "dimY": 5, "posAX": 1, "posAY": 1, "posBX": 5, "posBY": 5, "brickDensity": 50}';
         $this->setInitialData($json);
         $this->generateLabyrinth();
         $this->findPath();

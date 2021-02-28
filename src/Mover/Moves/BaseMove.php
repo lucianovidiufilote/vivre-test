@@ -13,10 +13,13 @@ abstract class BaseMove implements MoveInterface
 
     public static function canMove($labyrinth, PositionData $positionData)
     {
-        $currentX = $positionData->getPosAX();
-        $currentY = $positionData->getPosAY();
+        $currentX = $positionData->getPosAX() - 1;
+        $currentY = $positionData->getPosAY() - 1;
 
-        if ($labyrinth[$currentX + static::X] != 'b' && $labyrinth[$currentY + static::Y] != 'b') {
+        if (isset($labyrinth[$currentX + static::X])
+            && isset($labyrinth[$currentY + static::Y])
+            && $labyrinth[$currentX + static::X] != 'b'
+            && $labyrinth[$currentY + static::Y] != 'b') {
             return true;
         }
         return false;

@@ -6,6 +6,6 @@ namespace App\Mover\Moves;
 
 class Right extends BaseMove
 {
-    public $x = 1;
-    public $y = 0;
+    public const X = 1;
+    public const Y = 0;
 }

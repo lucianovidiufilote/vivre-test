@@ -17,6 +17,7 @@ class Path
      */
     private $positionData;
     private $labyrinth;
+    private $moves;
 
     public function __construct($labyrinth, PositionData $positionData)
     {
@@ -46,10 +47,45 @@ class Path
 
     public function lookAround()
     {
+        $output = [];
         if (Up::canMove($this->labyrinth, $this->positionData)) {
-            $this->positionData->setPosAX($this->positionData->getPosAX() + Up::X);
-            $this->positionData->setPosAY($this->positionData->getPosAY() + Up::Y);
+            $newPosData = clone $this->positionData;
+            $newPosData->setPosAX($this->positionData->getPosAX() + Up::X);
+            $newPosData->setPosAY($this->positionData->getPosAY() + Up::Y);
+            $newPath = new Path($this->labyrinth, $newPosData);
+            $newPath->moves = $this->moves;
+            $newPath->moves[] = Up::class;
+            $output[] = $newPath;
         }
+
+        if (Down::canMove($this->labyrinth, $this->positionData)) {
+            $newPosData = clone $this->positionData;
+            $newPosData->setPosAX($this->positionData->getPosAX() + Down::X);
+            $newPosData->setPosAY($this->positionData->getPosAY() + Down::Y);
+            $newPath = new Path($this->labyrinth, $newPosData);
+            $newPath->moves = $this->moves;
+            $newPath->moves[] = Down::class;
+            $output[] = $newPath;
+        }
+        if (Right::canMove($this->labyrinth, $this->positionData)) {
+            $newPosData = clone $this->positionData;
+            $newPosData->setPosAX($this->positionData->getPosAX() + Right::X);
+            $newPosData->setPosAY($this->positionData->getPosAY() + Right::Y);
+            $newPath = new Path($this->labyrinth, $newPosData);
+            $newPath->moves = $this->moves;
+            $newPath->moves[] = Right::class;
+            $output[] = $newPath;
+        }
+        if (Left::canMove($this->labyrinth, $this->positionData)) {
+            $newPosData = clone $this->positionData;
+            $newPosData->setPosAX($this->positionData->getPosAX() + Left::X);
+            $newPosData->setPosAY($this->positionData->getPosAY() + Left::Y);
+            $newPath = new Path($this->labyrinth, $newPosData);
+            $newPath->moves = $this->moves;
+            $newPath->moves[] = Left::class;
+            $output[] = $newPath;
+        }
+        return $output;
     }
 
 
