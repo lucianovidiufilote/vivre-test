@@ -1,0 +1,19 @@
+{
+    "name": "lucianovidiufilote/vivre-test",
+    "description": "Test pentru Vivre",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Lucian Filote",
+            "email": "lucian.filote@gmail.com"
+        }
+    ],
+    "require": {
+        "php-di/php-di": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src"
+        }
+    }
+}

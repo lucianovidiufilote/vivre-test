@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="148d0eab-d04c-402c-851e-476ddb86e10d" name="VPS" url="https://www.louchan.ro/vivre-test/">
+        <fileTransfer rootFolder="/var/www/html/louchan.ro/vivre-test" accessType="SFTP" host="185.244.129.130" port="22" sshConfigId="f3c50505-aeb7-465a-84f7-b171ae1f854a" sshConfig="root@185.244.129.130:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
