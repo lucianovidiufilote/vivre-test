@@ -96,7 +96,7 @@
                             <div v-if="moves !== null">
                                 <h6>Solution is: A -> <span v-for="moveStep in moves">{{moveStep}} -> </span> B </h6>
                                 <br/>
-                                <h6>Will start animating in about 2 seconds...</h6>
+                                <h6>Will start animating in about {{secondsUntilAnimation}} second<span v-if="secondsUntilAnimation > 1">s</span>...</h6>
                             </div>
                             <span v-else>
                                 No solution to this labyrinth
@@ -123,6 +123,8 @@
             posBX: 5,
             posBY: 5,
             brickDensity: 30,
+            secondsUntilAnimation: 2,//s
+            timeBetweenSteps: 500,//ms
             labyrinth: [],
             steps: [],
             moves: []
@@ -154,7 +156,7 @@
 
                         setTimeout(() => {
                             vm.move();
-                        }, 2000);
+                        }, vm.secondsUntilAnimation * 1000);
                     });
             },
             move: function () {
@@ -170,7 +172,7 @@
                     element.classList.add("path");
                     i++;
                     if (i < max) {
-                        setTimeout(doS, 500);
+                        setTimeout(doS, vm.timeBetweenSteps);
                     }
                 })();
             }
