@@ -8,5 +8,5 @@ use App\Data\PositionData\PositionData;
 
 interface MoveInterface
 {
-    public static function canMove($labyrinth, PositionData $positionData);
+    public static function canMove($labyrinth, PositionData $positionData, $moves, $positionsUsed);
 }

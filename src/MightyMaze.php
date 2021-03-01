@@ -38,12 +38,18 @@ class MightyMaze
         $this->pathFinder = $pathFinder;
     }
 
-    public function run($json = null)
+    public function run()
     {
-        $json = '{"dimX": 5, "dimY": 5, "posAX": 1, "posAY": 1, "posBX": 5, "posBY": 5, "brickDensity": 50}';
+        $json = $_REQUEST[0];
         $this->setInitialData($json);
         $this->generateLabyrinth();
         $this->findPath();
+
+        echo json_encode([
+            'labyrinth' => $this->labyrinthGenerator->getLabyrinth(),
+            'path'      => is_null($this->pathFinder->getPath()) ? null : $this->pathFinder->getPath()->getSteps()
+        ]);
+        die;
     }
 
     public function setInitialData($json)
@@ -55,15 +61,20 @@ class MightyMaze
 
     public function generateLabyrinth()
     {
+//        ob_implicit_flush();
+//        ob_start();
         $this->labyrinthGenerator->setLabyrinthData($this->labyrinthData);
         $this->labyrinthGenerator->setPositionInitialData($this->positionInitialData);
         $this->labyrinthGenerator->generate();
-        for ($i = 0; $i < count($this->labyrinthGenerator->getLabyrinth()); $i++) {
-            for ($j = 0; $j < count($this->labyrinthGenerator->getLabyrinth()[$i]); $j++) {
-                echo $this->labyrinthGenerator->getLabyrinth()[$i][$j] . " ";
-            }
-            echo "<br/>";
-        }
+//        for ($i = 0; $i < count($this->labyrinthGenerator->getLabyrinth()); $i++) {
+//            for ($j = 0; $j < count($this->labyrinthGenerator->getLabyrinth()[$i]); $j++) {
+//                echo $this->labyrinthGenerator->getLabyrinth()[$i][$j] . " ";
+//            }
+//            echo "<br/>";
+//        }
+//        ob_end_flush();
+//        ob_flush();
+//        ob_clean();
     }
 
     public function findPath()

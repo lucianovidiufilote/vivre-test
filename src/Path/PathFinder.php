@@ -24,7 +24,9 @@ class PathFinder
      * @var PositionData $positionData
      */
     private $positionData;
-
+    /**
+     * @var array
+     */
     private $paths;
 
     public function findPath()
@@ -32,8 +34,26 @@ class PathFinder
         /**
          * First path
          */
-        $path = new Path($this->labyrinth, $this->positionData);
-        print_r($this->start($path));
+        $path = new Path($this->labyrinth, $this->positionData, $this->positionInitialData);
+        $this->start($path);
+
+        if (!empty($this->paths)) {
+            $bestPath = [];
+            /**
+             * @var Path $path
+             */
+            foreach ($this->paths as $path) {
+                $bestPath[count($path->getMoves())] = $path;
+            }
+
+            ksort($bestPath);
+            $result = reset($bestPath);
+            //print_r($result);die;
+            $this->setPath($result);
+        }
+        else {
+            $this->setPath(null);
+        }
     }
 
 
@@ -43,17 +63,18 @@ class PathFinder
      */
     private function start(Path $path)
     {
-        while (!$path->reachedEnd()) {
-            if (!$path->isStuck()) {
-                $output = $path->lookAround();
-                foreach ($output as $path) {
-                    $this->start($path);
-                }
-            }
+        if ($path->reachedEnd()) {
+            $this->paths[] = $path;
+            return $path;
         }
 
-        if ($path->reachedEnd() && !$path->isStuck()) {
-            return $path;
+        if ($path->isStuck()){
+            return false;
+        }
+
+        $output = $path->lookAround();
+        foreach ($output as $path) {
+            $this->start($path);
         }
     }
 

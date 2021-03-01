@@ -5,6 +5,7 @@ namespace App\Path;
 
 
 use App\Data\PositionData\PositionData;
+use App\Data\PositionData\PositionInitialData;
 use App\Mover\Moves\Down;
 use App\Mover\Moves\Left;
 use App\Mover\Moves\Right;
@@ -17,18 +18,25 @@ class Path
      */
     private $positionData;
     private $labyrinth;
-    private $moves;
+    private $moves = [];
+    private $positionsUsed;
+    /**
+     * @var PositionInitialData
+     */
+    private $positionInitialData;
 
-    public function __construct($labyrinth, PositionData $positionData)
+    public function __construct($labyrinth, PositionData $positionData, PositionInitialData $positionInitialData)
     {
         $this->labyrinth = $labyrinth;
         $this->positionData = $positionData;
+        $this->positionInitialData = $positionInitialData;
     }
 
 
     public function reachedEnd()
     {
-        if ($this->positionData->getPosAX() == $this->positionData->getPosBX() && $this->positionData->getPosAY() == $this->positionData->getPosBY()) {
+        if ($this->positionData->getPosAX() == $this->positionData->getPosBX()
+            && $this->positionData->getPosAY() == $this->positionData->getPosBY()) {
             return true;
         }
         return false;
@@ -36,10 +44,14 @@ class Path
 
     public function isStuck()
     {
-        if (!Up::canMove($this->labyrinth, $this->positionData)
-            && !Down::canMove($this->labyrinth, $this->positionData)
-            && !Left::canMove($this->labyrinth, $this->positionData)
-            && !Right::canMove($this->labyrinth, $this->positionData)) {
+        $up = Up::canMove($this->labyrinth, $this->positionData, $this->moves, $this->positionsUsed);
+        $down = Down::canMove($this->labyrinth, $this->positionData, $this->moves, $this->positionsUsed);
+        $left = Left::canMove($this->labyrinth, $this->positionData, $this->moves, $this->positionsUsed);
+        $right = Right::canMove($this->labyrinth, $this->positionData, $this->moves, $this->positionsUsed);
+        if (!$up
+            && !$down
+            && !$left
+            && !$right) {
             return true;
         }
         return false;
@@ -47,43 +59,51 @@ class Path
 
     public function lookAround()
     {
+        $moves = [
+            Up::class,
+            Down::class,
+            Left::class,
+            Right::class
+        ];
         $output = [];
-        if (Up::canMove($this->labyrinth, $this->positionData)) {
-            $newPosData = clone $this->positionData;
-            $newPosData->setPosAX($this->positionData->getPosAX() + Up::X);
-            $newPosData->setPosAY($this->positionData->getPosAY() + Up::Y);
-            $newPath = new Path($this->labyrinth, $newPosData);
-            $newPath->moves = $this->moves;
-            $newPath->moves[] = Up::class;
-            $output[] = $newPath;
+        foreach ($moves as $move) {
+            if ($move::canMove($this->labyrinth, $this->positionData, $this->moves, $this->positionsUsed)) {
+                $newPosData = clone $this->positionData;
+                $newPosData->setPosAX($this->positionData->getPosAX() + $move::X);
+                $newPosData->setPosAY($this->positionData->getPosAY() + $move::Y);
+                $newPath = new Path($this->labyrinth, $newPosData, $this->positionInitialData);
+                $newPath->moves = $this->moves;
+                $newPath->moves[] = $move;
+                if (!isset($this->positionsUsed[$newPosData->getPosAX()][$newPosData->getPosAY()])) {
+                    $this->positionsUsed[$newPosData->getPosAX()][$newPosData->getPosAY()] = 0;
+                }
+                $this->positionsUsed[$newPosData->getPosAX()][$newPosData->getPosAY()]++;
+                $newPath->positionsUsed = $this->positionsUsed;
+                $output[] = $newPath;
+            }
         }
+        return $output;
+    }
 
-        if (Down::canMove($this->labyrinth, $this->positionData)) {
-            $newPosData = clone $this->positionData;
-            $newPosData->setPosAX($this->positionData->getPosAX() + Down::X);
-            $newPosData->setPosAY($this->positionData->getPosAY() + Down::Y);
-            $newPath = new Path($this->labyrinth, $newPosData);
-            $newPath->moves = $this->moves;
-            $newPath->moves[] = Down::class;
-            $output[] = $newPath;
-        }
-        if (Right::canMove($this->labyrinth, $this->positionData)) {
-            $newPosData = clone $this->positionData;
-            $newPosData->setPosAX($this->positionData->getPosAX() + Right::X);
-            $newPosData->setPosAY($this->positionData->getPosAY() + Right::Y);
-            $newPath = new Path($this->labyrinth, $newPosData);
-            $newPath->moves = $this->moves;
-            $newPath->moves[] = Right::class;
-            $output[] = $newPath;
-        }
-        if (Left::canMove($this->labyrinth, $this->positionData)) {
-            $newPosData = clone $this->positionData;
-            $newPosData->setPosAX($this->positionData->getPosAX() + Left::X);
-            $newPosData->setPosAY($this->positionData->getPosAY() + Left::Y);
-            $newPath = new Path($this->labyrinth, $newPosData);
-            $newPath->moves = $this->moves;
-            $newPath->moves[] = Left::class;
-            $output[] = $newPath;
+    /**
+     * @return array
+     */
+    public function getMoves(): array
+    {
+        return $this->moves;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSteps()
+    {
+        $this->positionInitialData;
+        $output = [];
+        $i = 0;
+        $output[0] = [$this->positionInitialData->getPosAX(), $this->positionInitialData->getPosAY()];
+        foreach ($this->moves as $move){
+            $output[++$i] = [$output[$i-1][0] + $move::X, $output[$i-1][1] + $move::Y];
         }
         return $output;
     }

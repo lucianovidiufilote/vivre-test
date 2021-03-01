@@ -1,0 +1,158 @@
+<html>
+<head>
+    <title></title>
+    <base href="/"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div id="app">
+    <br/>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3>Mighty Maze</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="dimX" class="form-label">dimX</label>
+                            <input type="number" v-model="dimX" min="0" max="100" step="1" class="form-control"
+                                   id="dimX"
+                                   placeholder="dimX">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dimY" class="form-label">dimY</label>
+                            <input type="number" v-model="dimY" min="0" max="100" step="1" class="form-control"
+                                   id="dimY"
+                                   placeholder="dimY">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="posAX" class="form-label">posAX</label>
+                            <input type="number" v-model="posAX" min="0" max="100" step="1" class="form-control"
+                                   id="posAX" placeholder="posAX">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="posAY" class="form-label">posAY</label>
+                            <input type="number" v-model="posAY" min="0" max="100" step="1" class="form-control"
+                                   id="posAY" placeholder="posAY">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="posBX" class="form-label">posBX</label>
+                            <input type="number" v-model="posBX" min="0" max="100" step="1" class="form-control"
+                                   id="posBX" placeholder="posBX">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="posBY" class="form-label">posBY</label>
+                            <input type="number" v-model="posBY" min="0" max="100" step="1" class="form-control"
+                                   id="posBY" placeholder="posBY">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="brickDensity" class="form-label">brickDensity</label>
+                            <input type="number" v-model="brickDensity" min="0" max="100" step="1" class="form-control"
+                                   id="brickDensity" placeholder="brickDensity">
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success mb-3" @click="getMightyMaze">RUN</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card center">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3>Labyrinth</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table v-if="labyrinth.length > 0">
+                            <tbody>
+                            <tr v-for="(row, index) in labyrinth" :key="index">
+                                <td v-for="(col, ind) in row" :key="ind">
+                                    {{ col }}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            dimX: 5,
+            dimY: 5,
+            posAX: 1,
+            posAY: 1,
+            posBX: 5,
+            posBY: 5,
+            brickDensity: 30,
+            labyrinth: [],
+            steps: []
+        },
+        methods: {
+            getMightyMaze: function () {
+                let vm = this;
+                let params = JSON.stringify({
+                    dimX: this.dimX,
+                    dimY: this.dimY,
+                    posAX: this.posAX,
+                    posAY: this.posAY,
+                    posBX: this.posBX,
+                    posBY: this.posBY,
+                    brickDensity: this.brickDensity
+                });
+                axios({
+                    method: 'get',
+                    url: '/vivre-test/api/maze',
+                    params: params
+                })
+                    .then(function (response) {
+                        vm.labyrinth = response.data.labyrinth;
+                        vm.steps = response.data.steps;
+                        console.log(this.labyrinth);
+
+                        // console.log(response.data);
+                        // for (let i=0; i<response.data.length; i++){
+                        //     for (let j = 0; j<response.data[0]; j++){
+                        //
+                        //     }
+                        // }
+                    });
+            },
+            move: function () {
+
+            }
+        }
+    })
+</script>
+<style>
+    td {
+        padding: 10px;
+        font-size: 2em;
+        font-weight: bold;
+    }
+</style>
+</body>

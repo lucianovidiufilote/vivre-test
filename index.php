@@ -12,3 +12,6 @@ $container = $builder->build();
 
 $app = $container->get('App\MightyMaze');
 $app->run();
+
+//$router = new \Bramus\Router\Router();
+//$router->post('/api/maze', '\App\MightyMaze@run');
