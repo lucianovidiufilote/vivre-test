@@ -7,6 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -19,6 +21,7 @@
                     <div class="card-header">
                         <div class="card-title">
                             <h3>Mighty Maze</h3>
+                            Read more: <a href="https://github.com/lucianovidiufilote/vivre-test" target="_blank">https://github.com/lucianovidiufilote/vivre-test</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -79,15 +82,29 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table v-if="labyrinth.length > 0">
-                            <tbody>
-                            <tr v-for="(row, index) in labyrinth" :key="index">
-                                <td v-for="(col, ind) in row" :key="ind">
-                                    {{ col }}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <div id="solution" v-if="labyrinth.length > 0">
+                            <table>
+                                <tbody>
+                                <tr v-for="(row, index) in labyrinth" :key="index">
+                                    <td v-for="(col, ind) in row" :key="ind" :data-x="index + 1" :data-y="ind + 1">
+                                        {{ col }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <div v-if="moves !== null">
+                                <h6>Solution is: A -> <span v-for="moveStep in moves">{{moveStep}} -> </span> B </h6>
+                                <br/>
+                                <h6>Will start animating in about 2 seconds...</h6>
+                            </div>
+                            <span v-else>
+                                No solution to this labyrinth
+                            </span>
+                        </div>
+                        <div v-else>
+                            No labyrinth yet. Please enter data!
+                        </div>
                     </div>
                 </div>
             </div>
@@ -95,9 +112,6 @@
     </div>
 
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="text/javascript">
     new Vue({
         el: '#app',
@@ -110,10 +124,14 @@
             posBY: 5,
             brickDensity: 30,
             labyrinth: [],
-            steps: []
+            steps: [],
+            moves: []
         },
         methods: {
             getMightyMaze: function () {
+                this.labyrinth = [];
+                this.steps = [];
+                this.moves = [];
                 let vm = this;
                 let params = JSON.stringify({
                     dimX: this.dimX,
@@ -132,18 +150,29 @@
                     .then(function (response) {
                         vm.labyrinth = response.data.labyrinth;
                         vm.steps = response.data.steps;
-                        console.log(this.labyrinth);
+                        vm.moves = response.data.moves;
 
-                        // console.log(response.data);
-                        // for (let i=0; i<response.data.length; i++){
-                        //     for (let j = 0; j<response.data[0]; j++){
-                        //
-                        //     }
-                        // }
+                        setTimeout(() => {
+                            vm.move();
+                        }, 2000);
                     });
             },
             move: function () {
+                let keys = Object.keys(this.steps);
+                let i = 0;
+                let vm = this;
+                let max = keys.length;
 
+                (function doS() {
+                    let x = vm.steps[i][0];
+                    let y = vm.steps[i][1];
+                    let element = document.querySelector('[data-x="' + x + '"][data-y="' + y + '"]');
+                    element.classList.add("path");
+                    i++;
+                    if (i < max) {
+                        setTimeout(doS, 500);
+                    }
+                })();
             }
         }
     })
@@ -153,6 +182,10 @@
         padding: 10px;
         font-size: 2em;
         font-weight: bold;
+    }
+
+    .path {
+        background-color: #98f7a4;
     }
 </style>
 </body>

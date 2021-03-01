@@ -10,6 +10,7 @@ use App\Mover\Moves\Down;
 use App\Mover\Moves\Left;
 use App\Mover\Moves\Right;
 use App\Mover\Moves\Up;
+use ReflectionClass;
 
 class Path
 {
@@ -104,6 +105,15 @@ class Path
         $output[0] = [$this->positionInitialData->getPosAX(), $this->positionInitialData->getPosAY()];
         foreach ($this->moves as $move){
             $output[++$i] = [$output[$i-1][0] + $move::X, $output[$i-1][1] + $move::Y];
+        }
+        return $output;
+    }
+
+    public function getStringMoves()
+    {
+        $output = [];
+        foreach ($this->moves as $move){
+            $output[] = (new ReflectionClass($move))->getShortName();
         }
         return $output;
     }

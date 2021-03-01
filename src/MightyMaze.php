@@ -47,7 +47,8 @@ class MightyMaze
 
         echo json_encode([
             'labyrinth' => $this->labyrinthGenerator->getLabyrinth(),
-            'path'      => is_null($this->pathFinder->getPath()) ? null : $this->pathFinder->getPath()->getSteps()
+            'steps'      => is_null($this->pathFinder->getPath()) ? null : $this->pathFinder->getPath()->getSteps(),
+            'moves'      => is_null($this->pathFinder->getPath()) ? null : $this->pathFinder->getPath()->getStringMoves()
         ]);
         die;
     }

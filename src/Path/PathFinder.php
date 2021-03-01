@@ -9,6 +9,9 @@ use App\Data\PositionData\PositionInitialData;
 
 class PathFinder
 {
+    /**
+     * @var Path $path
+     */
     private $path;
 
     /**
