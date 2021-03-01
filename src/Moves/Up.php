@@ -1,10 +1,8 @@
 <?php
 
 
-namespace App\Mover\Moves;
+namespace App\Moves;
 
-
-use App\Data\PositionData\PositionData;
 
 class Up extends BaseMove
 {

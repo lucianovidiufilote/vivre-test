@@ -1,11 +1,12 @@
 <?php
 
 
-namespace App\Path;
+namespace App\PathFinder;
 
 
 use App\Data\PositionData\PositionData;
 use App\Data\PositionData\PositionInitialData;
+use App\Path\Path;
 
 class PathFinder
 {
@@ -38,8 +39,16 @@ class PathFinder
          * First path
          */
         $path = new Path($this->labyrinth, $this->positionData, $this->positionInitialData);
+
+        /**
+         * Detect all paths
+         * Save to $this->paths
+         */
         $this->start($path);
 
+        /**
+         * Detect the shortest path
+         */
         if (!empty($this->paths)) {
             $bestPath = [];
             /**
@@ -51,7 +60,6 @@ class PathFinder
 
             ksort($bestPath);
             $result = reset($bestPath);
-            //print_r($result);die;
             $this->setPath($result);
         }
         else {
@@ -61,6 +69,13 @@ class PathFinder
 
 
     /**
+     * Recursive function for detecting all paths
+     * While being on a position, generate all possible paths
+     * If you get stuck, abandon path
+     * If you do not get stuck, save path to $this->paths
+     *
+     * @todo: optimize algo, maybe use existing one
+     *
      * @param Path $path
      * @return mixed
      */
@@ -81,13 +96,6 @@ class PathFinder
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLabyrinth()
-    {
-        return $this->labyrinth;
-    }
 
     /**
      * @param mixed $labyrinth
@@ -97,13 +105,6 @@ class PathFinder
         $this->labyrinth = $labyrinth;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPositionInitialData()
-    {
-        return $this->positionInitialData;
-    }
 
     /**
      * @param mixed $positionInitialData
@@ -113,13 +114,6 @@ class PathFinder
         $this->positionInitialData = $positionInitialData;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPositionData()
-    {
-        return $this->positionData;
-    }
 
     /**
      * @param mixed $positionData

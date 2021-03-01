@@ -2,7 +2,7 @@
 
 ### This is an app made for Vivre technical test.
 
-Task:
+#### Task:
 
 1. Generate labyrinth based on input data
 2. Find road from A to B
@@ -10,8 +10,11 @@ Task:
 4. Build an UI to collect data and show the result
 5. Animate path
 
-Solution:
+#### Solution:
 
+_*Entry point: src/MightyMaze.php: run()*_
+
+#### How it was made:
 1.
     * Generate one dimensional array with `dimX * dimY` size, filled with 0
     * Fill the array with `brickDensity` number of bricks

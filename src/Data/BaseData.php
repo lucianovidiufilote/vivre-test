@@ -4,8 +4,6 @@
 namespace App\Data;
 
 
-use ReflectionException;
-
 abstract class BaseData
 {
     public function __construct($json)

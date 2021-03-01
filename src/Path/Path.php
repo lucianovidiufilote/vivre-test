@@ -6,10 +6,10 @@ namespace App\Path;
 
 use App\Data\PositionData\PositionData;
 use App\Data\PositionData\PositionInitialData;
-use App\Mover\Moves\Down;
-use App\Mover\Moves\Left;
-use App\Mover\Moves\Right;
-use App\Mover\Moves\Up;
+use App\Moves\Down;
+use App\Moves\Left;
+use App\Moves\Right;
+use App\Moves\Up;
 use ReflectionClass;
 
 class Path
@@ -34,6 +34,10 @@ class Path
     }
 
 
+    /**
+     * Check if A reached B
+     * @return bool
+     */
     public function reachedEnd()
     {
         if ($this->positionData->getPosAX() == $this->positionData->getPosBX()
@@ -43,6 +47,10 @@ class Path
         return false;
     }
 
+    /**
+     * Check if the player can move from the current position
+     * @return bool
+     */
     public function isStuck()
     {
         $up = Up::canMove($this->labyrinth, $this->positionData, $this->moves, $this->positionsUsed);
@@ -58,6 +66,10 @@ class Path
         return false;
     }
 
+    /**
+     * Generate all possible moves based on the position the player is currently located
+     * @return array
+     */
     public function lookAround()
     {
         $moves = [
@@ -95,6 +107,8 @@ class Path
     }
 
     /**
+     * Return an array of coordinates for each move
+     * Ex: [[1,1], [1,2]]
      * @return array
      */
     public function getSteps()
@@ -102,17 +116,29 @@ class Path
         $this->positionInitialData;
         $output = [];
         $i = 0;
-        $output[0] = [$this->positionInitialData->getPosAX(), $this->positionInitialData->getPosAY()];
-        foreach ($this->moves as $move){
-            $output[++$i] = [$output[$i-1][0] + $move::X, $output[$i-1][1] + $move::Y];
+        $output[0] = [
+            $this->positionInitialData->getPosAX(),
+            $this->positionInitialData->getPosAY()
+        ];
+        foreach ($this->moves as $move) {
+            $output[++$i] = [
+                $output[$i - 1][0] + $move::X,
+                $output[$i - 1][1] + $move::Y
+            ];
         }
         return $output;
     }
 
+    /**
+     * Return an array of string representation of moves
+     * Ex: ['up', 'down', 'left']
+     * @return array
+     * @throws \ReflectionException
+     */
     public function getStringMoves()
     {
         $output = [];
-        foreach ($this->moves as $move){
+        foreach ($this->moves as $move) {
             $output[] = (new ReflectionClass($move))->getShortName();
         }
         return $output;
