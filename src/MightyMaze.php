@@ -53,7 +53,10 @@ class MightyMaze
         exit;
     }
 
-
+    /**
+     * Populate local object with json user input data
+     * @param $json
+     */
     public function setInitialData($json)
     {
         /**

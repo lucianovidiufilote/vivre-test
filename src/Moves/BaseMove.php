@@ -12,6 +12,14 @@ abstract class BaseMove implements MoveInterface
     public const Y = 0;
     public const OPPOSITE_MOVE = null;
 
+    /**
+     * Check if the player can move in the implemented direction
+     * @param $labyrinth
+     * @param PositionData $positionData
+     * @param $moves
+     * @param $positionsUsed
+     * @return bool
+     */
     public static function canMove($labyrinth, PositionData $positionData, $moves, $positionsUsed)
     {
         $lastMove = end($moves);

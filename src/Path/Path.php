@@ -72,6 +72,9 @@ class Path
      */
     public function lookAround()
     {
+        /**
+         * Each class has its own coordinates changes
+         */
         $moves = [
             Up::class,
             Down::class,
@@ -79,6 +82,7 @@ class Path
             Right::class
         ];
         $output = [];
+
         foreach ($moves as $move) {
             if ($move::canMove($this->labyrinth, $this->positionData, $this->moves, $this->positionsUsed)) {
                 $newPosData = clone $this->positionData;

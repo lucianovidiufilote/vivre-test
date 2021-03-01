@@ -22,14 +22,6 @@ class LabyrinthGenerator
     private $positionInitialData;
 
     /**
-     * @return PositionInitialData
-     */
-    public function getPositionInitialData()
-    {
-        return $this->positionInitialData;
-    }
-
-    /**
      * @param PositionInitialData $positionInitialData
      */
     public function setPositionInitialData($positionInitialData)
@@ -89,14 +81,6 @@ class LabyrinthGenerator
     }
 
     /**
-     * @return mixed
-     */
-    public function getLabyrinthData()
-    {
-        return $this->labyrinthData;
-    }
-
-    /**
      * @param mixed $labyrinthData
      */
     public function setLabyrinthData($labyrinthData)
@@ -111,14 +95,5 @@ class LabyrinthGenerator
     {
         return $this->labyrinth;
     }
-
-    /**
-     * @param mixed $labyrinth
-     */
-    public function setLabyrinth($labyrinth)
-    {
-        $this->labyrinth = $labyrinth;
-    }
-
 
 }
