@@ -1,4 +1,4 @@
-# vivre-test
+# Mighty Maze ( Vivre test )
 
 ### This is an app made for Vivre technical test.
 
